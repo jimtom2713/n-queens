@@ -21,33 +21,78 @@
 */
 
 window.findNRooksSolution = function(n) {
-  var board = new Board({n:n}); 
-  var solution = [];
-  // board.togglePiece(0,0);
+//start with a board
+var board = new Board({n:n});
+//toggle a piece
+var pieceCount = 0;
+var solution;
 
-  var placePiece = function(board, rowIndex, columnIndex){
-    var previousState = board;
-    board.togglePiece(rowIndex, columnIndex);
-    if(!(board.hasAnyRooksConflicts())){ //no conflicts
-      if(rowIndex < board.rows().length){
-        console.log(board.rows()[rowIndex]);
-        debugger;
-        solution.push(board.rows()[rowIndex]);
-        console.log(solution);
-        placePiece(board, rowIndex++, rowIndex+1);
-      }else if(solution.length === board.rows().length){
-        return solution;
-      }
+board.togglePiece(rowIndex, columnIndex);
+if(board.hasAnyRooksConflicts()){
+  //toggle the piece back
+  board.togglePiece(rowIndex,columnIndex);
+  //can we move to the next column?
+  //if yes
+  if(columnIndex < board.rows().length){
+    mystery(board, rowIndex, columnIndex++)
+  }else{
+    if(rowIndex < board.rows().length){
+      mystery(board, rowIndex++, 0);
     }else{
-      if(columnIndex < board.rows().length){
-        placePiece(previousState, rowIndex, columnIndex++);
-      }else if(columnIndex === board.rows().length-1){
-        solution.pop();
-        placePiece(previousState, rowIndex + 1, 0);
+      if(pieceCount === board.rows().length){
+        solution = board;
+      }else{
+        var previousPiece = _.indexOf(board.rows()[rowIndex], 1);
+        mystery(previousPiece, previousPiece + 1);
       }
     }
   }
-  placePiece(board, 0, 0)
+}else{
+  pieceCount++;
+  if(pieceCount < board.rows().length){
+    if(columnIndex < board.rows().length){
+      mystery(board, rowIndex, columnIndex++)
+    }else{
+      if(rowIndex < board.rows().length){
+        mystery(board, rowIndex++, 0);
+      }else{
+        if(pieceCount === board.rows().length){
+          solution = board;
+        }
+      }
+    }
+  }
+
+    //do it -> col++ ???
+  //if no
+    //can we move to the next row?
+    //if yes
+      //do it
+    //if no
+      //start this code over and toggle the previous row and next column
+//if no conflicts
+  //pieceCount++
+  //if pieceCount < board.rows().length
+  //can we move to the next column
+    //if yes
+      //do it -> col++
+    //if no
+      //can we move to the next row?
+      //if yes
+        //do it
+      //if no
+        //stop?
+        //return null;
+  //}else{
+    //return solution;
+  //}
+
+
+
+
+//else
+  //do other stuff
+
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   // return solution;
   return solution;
