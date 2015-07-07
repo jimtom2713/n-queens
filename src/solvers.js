@@ -25,78 +25,125 @@ window.findNRooksSolution = function(n) {
 var board = new Board({n:n});
 //toggle a piece
 var pieceCount = 0;
-var solution;
+var solution = board;
 
-board.togglePiece(rowIndex, columnIndex);
-if(board.hasAnyRooksConflicts()){
-  //toggle the piece back
-  board.togglePiece(rowIndex,columnIndex);
-  //can we move to the next column?
-  //if yes
-  if(columnIndex < board.rows().length){
-    mystery(board, rowIndex, columnIndex++)
-  }else{
-    if(rowIndex < board.rows().length){
-      mystery(board, rowIndex++, 0);
-    }else{
-      if(pieceCount === board.rows().length){
-        solution = board;
-      }else{
-        var previousPiece = _.indexOf(board.rows()[rowIndex], 1);
-        mystery(previousPiece, previousPiece + 1);
-      }
-    }
-  }
-}else{
+var mystery = function(board, rowIndex, columnIndex) {
+  // toggle piece
+  // test for solution 
+  // check if conflicts
+    // if conflicts, untoggle piece
+
+      // if curColIndex < board length
+        // recurse
+      // 
+  board.togglePiece(rowIndex, columnIndex);
   pieceCount++;
-  if(pieceCount < board.rows().length){
-    if(columnIndex < board.rows().length){
-      mystery(board, rowIndex, columnIndex++)
-    }else{
-      if(rowIndex < board.rows().length){
-        mystery(board, rowIndex++, 0);
-      }else{
-        if(pieceCount === board.rows().length){
-          solution = board;
-        }
-      }
+  if(board.hasAnyRooksConflicts()){
+    board.togglePiece(rowIndex, columnIndex);
+    pieceCount--;
+  }else{
+    // debugger;
+    if(pieceCount === n || (columnIndex === n - 1 && rowIndex === n - 1)){
+      solution = board.rows();
+      return;
     }
   }
 
-    //do it -> col++ ???
-  //if no
-    //can we move to the next row?
-    //if yes
-      //do it
-    //if no
-      //start this code over and toggle the previous row and next column
-//if no conflicts
-  //pieceCount++
-  //if pieceCount < board.rows().length
-  //can we move to the next column
-    //if yes
-      //do it -> col++
-    //if no
-      //can we move to the next row?
-      //if yes
-        //do it
-      //if no
-        //stop?
-        //return null;
-  //}else{
-    //return solution;
-  //}
-
-
-
-
-//else
-  //do other stuff
-
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
-  // return solution;
-  return solution;
+  if(columnIndex < board.rows().length){
+    // console.log("current: ", rowIndex,columnIndex);
+    console.log("now checking: ", rowIndex, columnIndex +1 );
+    mystery(board, rowIndex, columnIndex + 1);
+  }else{
+  // if(rowIndex < board.rows().length){
+    // console.log("current: ", rowIndex,columnIndex);
+    console.log("now checking: ", rowIndex + 1, 0 );
+    mystery(board, rowIndex + 1, 0);
+  }
+  
 };
+  mystery(solution, 0, 0);
+  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
+  return solution;
+//BASE CASE
+};
+//failed to find a solution
+// rowsIndex >= board length - 1 && columnIndex >= board length - 1 && pieceCount !== board length (n)?
+// return null -> not a solution
+
+//succeed
+// rowsIndex === board length && columnIndex === board length && pieceCount === board length (n)?
+// return solution -> array of row arrays -> matrix
+
+// board.togglePiece(rowIndex, columnIndex);
+// if(board.hasAnyRooksConflicts()){
+//   //toggle the piece back
+//   board.togglePiece(rowIndex,columnIndex);
+//   //can we move to the next column?
+//   //if yes
+//   // check if row out of bounds
+//   if(columnIndex < board.rows().length){
+//     mystery(board, rowIndex, columnIndex++)
+//   }else{
+//     if(rowIndex < board.rows().length){
+//       mystery(board, rowIndex++, 0);
+//     }else{
+//       if(pieceCount === board.rows().length){
+//         solution = board;
+//       }else{
+//         var previousPiece = _.indexOf(board.rows()[rowIndex], 1);
+//         mystery(previousPiece, previousPiece + 1);
+//       }
+//     }
+//   }
+// }else{
+//   pieceCount++;
+//   if(pieceCount < board.rows().length){
+//     if(columnIndex < board.rows().length){
+//       mystery(board, rowIndex, columnIndex++)
+//     }else{
+//       if(rowIndex < board.rows().length){
+//         mystery(board, rowIndex++, 0);
+//       }else{
+//         if(pieceCount === board.rows().length){
+//           solution = board;
+//         }
+//       }
+//     }
+//   }
+
+//     //do it -> col++ ???
+//   //if no
+//     //can we move to the next row?
+//     //if yes
+//       //do it
+//     //if no
+//       //start this code over and toggle the previous row and next column
+// //if no conflicts
+//   //pieceCount++
+//   //if pieceCount < board.rows().length
+//   //can we move to the next column
+//     //if yes
+//       //do it -> col++
+//     //if no
+//       //can we move to the next row?
+//       //if yes
+//         //do it
+//       //if no
+//         //stop?
+//         //return null;
+//   //}else{
+//     //return solution;
+//   //}
+
+
+
+
+// //else
+//   //do other stuff
+
+  // return solution;
+  // return solution;
+// };
 
 
 
